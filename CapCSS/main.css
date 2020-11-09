@@ -1,0 +1,189 @@
+@charset "utf-8";
+
+/*按鈕樣式*/
+.but_arc , a.but_arc{
+	border-radius: 15px;
+	font-size: 0.8em;
+	color: #333;
+	line-height: 20px;
+	margin: 5px;
+	padding: 5px 15px;
+	box-sizing: border-box;
+	border-style: none;
+	transition: all 0.5s;
+	font-family: Arial, "微軟正黑體", "新細明體";
+	display: inline-block;
+}
+.but_arc:hover , .but_arc:focus{color: #333;}
+.bg_green{background-color: #3CC;}
+.bg_green:hover , .bg_green:focus{background-color: #116868; color:#fff;}
+.bg_orange{background-color: #F90;}
+.bg_orange:hover , .bg_orange:focus{background-color: #eb8d01;}
+.bg_blue{background-color: #0CF;}
+.bg_blue:hover , .bg_blue:focus{background-color: #025b71;color:#fff;}
+.bg_yellow{background-color: #fbe600;}
+.bg_yellow:hover , .bg_yellow:focus{background-color: #e0ce01;}
+.bg_black , a.bg_black{background-color: #333;color: #FFF;}
+.bg_black:hover , .bg_black:focus{background-color: #2e374b;color: #FF0;}
+.bg_gray{background-color: #CCC;}
+.bg_gray:hover , .bg_gray:focus{background-color: #333;color:#fff;}
+.bg_red , a.bg_red{background-color: #ff7373;}
+.bg_red:hover , a.bg_red:hover , .bg_red:focus , a.bg_red:focus{background-color: #d84f4f;color: #FFF;}
+
+.but_arc_input{
+	margin: 5px;
+	display: inline-block;
+	border-radius: 15px;
+	position: relative;
+	line-height: 20px;
+}
+.but_arc_input i{
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+.but_arc_input input[type='submit'] , .but_arc_input input[type='image']{
+	cursor:pointer;
+	box-sizing: border-box;
+	padding: 5px 15px 5px 30px;
+	border-radius: 15px;
+	font-size: 0.8em;
+	line-height: 20px;
+	background-color: transparent;
+	border-style: none;
+	color: #FFF;
+	transition: all 0.5s;
+	font-family: Arial, "微軟正黑體", "新細明體";
+}
+.but_arc_onlyI , a.but_arc_onlyI{
+	border-radius: 15px;
+	font-size: 1em;
+	color: #333;
+	margin: 3px;
+	padding: 5px;
+	box-sizing: border-box;
+	border-style: none;
+	transition: all 0.5s;
+	height: 30px;
+	width: 30px;
+	text-align: center;
+	display: inline-block;
+}
+.but_arc_onlyI u{ display:none;}
+/*按鈕樣式 END*/
+
+ 
+
+ 
+
+.Table_List {
+	font-family: Arial, "微軟正黑體", "新細明體";
+	margin: 5px auto;
+}
+.Table_List th{
+	padding:5px;
+	text-align: right;
+	padding-right: 8px;
+	border-bottom: 1px solid  #6CF;
+}
+.Table_List td{
+	border-bottom: 1px solid #99dcfd;padding:5px;
+}
+.Table_List .inLeft{text-align:left;}
+
+.main_table{ width: 90%;font-family: Arial, "微軟正黑體", "新細明體";margin: 5px auto; border: solid 3px #666; }
+.main_table caption{font-size: 1.2em;margin-bottom: 5px;text-align: left;}
+.main_table th{border-bottom: 2px solid  #6CF;padding: 10px;}
+.main_table td{border-bottom: 1px solid  #ccc;padding: 10px;}
+.main_table tr:last-child td{border-bottom-style:none;}
+
+.searchBOX{
+	background-color: #333333;
+	border-bottom-right-radius: 15px;
+	border-bottom-left-radius: 15px;
+	padding: 10px;
+	margin-top: -5px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	font-family: Arial, "微軟正黑體", "新細明體";
+}
+.searchBOX span{
+	margin: 5px;
+	line-height: 30px;
+	color: #FFF;
+}
+.searchBOX  input[type="text"]{
+	border-radius: 10px;
+	line-height: 30px;
+	margin: 5px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	height: 30px;
+}
+.searchBOX input[type="submit"] , .searchBOX button{
+	border-radius: 50px;
+	margin: 5px;
+	background-color: #FC0;
+	height: 30px;
+	border-style: none;
+	width: 80px;
+	box-sizing: border-box;
+	font-size: 1.1em;
+	font-family: Arial, "微軟正黑體", "新細明體";
+}
+
+.searchBOX input[type="submit"]:hover , .searchBOX button:hover , .searchBOX input[type="submit"]:focus , .searchBOX button:focus{
+	background-color: #09F;
+}
+.searchBOX select{ width:120px;}
+
+
+.searchBOX_singleinput{ display: inline-block; border-radius: 30px;border:solid 1px #ccc;}  
+.searchBOX_singleinput input[ type="text"]{border-style: none;background-color: transparent;padding: 0px 10px;margin-left: 5px;}
+.searchBOX_singleinput .but_seach{background-color: #ccc; color: #fff;border-style: none;padding: 8px 10px;border-top-right-radius: 15px;border-bottom-right-radius: 15px; transition: all 0.5s; cursor: pointer;}
+.searchBOX_singleinput .but_seach:hover{background-color: #333; }
+
+
+/*頁數樣式*/
+.pages{
+	border-radius: 5px;
+	display: inline-block;
+	box-sizing: border-box;
+}
+ 
+.pages  a , .pages  a.current{
+	font-size: 0.8em;
+    box-sizing: border-box;
+	border: solid 1px #efefef;
+	display: inline-block;
+	margin: 0px;
+	color: #333;
+	padding: 8px 15px;
+	margin-left: -1px;
+}
+.pages  a:hover{
+	background-color: #efefef;
+}
+.pages  a.current , .pages  a.current:hover{
+	background-color: #e1e1e1;
+	border: solid 1px #e1e1e1;
+	color: #333;
+}
+
+ 
+
+.formBoX{ background-color: #fff;padding: 20px;}
+h3.fancyInTitle{text-align:left;margin: 0px;padding: 0px;margin-bottom: 40px;}
+.sign_but_fb , .sign_but_google{border-style: none;display: block;width: 100%;margin: 10px;height: 50px;border-radius: 5px;font-size: 1.2em;font-family: Arial, "微軟正黑體", "新細明體";padding: 0px;text-align: left;color: #fff;transition:  all 0.5s;}
+.sign_but_fb i , .sign_but_google i{color: #fff;background-color: rgba(0,0,0,0.3);margin: 0px; width: 50px;height: 50px;line-height: 50px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;text-align: center;margin-right: 10px;}
+.sign_but_fb{background-color: #1B68CF;}
+.sign_but_google{background-color: #F96C2C;}
+.sign_but_fb:hover{background-color: #013C8C;}
+.sign_but_google:hover{background-color: #C76900;}
+.sign_but_fb i{}
+.sign_but_google i{}
+
+
