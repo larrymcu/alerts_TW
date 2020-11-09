@@ -95,7 +95,7 @@ var suid1 = 'capdata_T300250';var suid2 = '_Extreme_';
 var suid3 = '';
 if(suid3.length>7){suid3 = suid3.substring(0,7);}
 var suid = suid1+suid2+suid3;
-console.log(suid); var WebAPI= 'http://61.56.4.221/DataWebAPI/api/CapData'+'?CapModuleType='+3+'&suid='+suid3+'&timeStamp='+capdata_T300250_Extreme_.Timestamp+'&format=json&ApiKey=E03F2189-3202-4B60-B9CA-FBB74418D144';
+console.log(suid); var WebAPI= 'https://alertsmodule.ncdr.nat.gov.tw/DataWebAPI/api/CapData'+'?CapModuleType='+3+'&suid='+suid3+'&timeStamp='+capdata_T300250_Extreme_.Timestamp+'&format=json&ApiKey=E03F2189-3202-4B60-B9CA-FBB74418D144';
  $.getJSON(WebAPI, function (data) {
                               if(data == null){
 								var today = new Date();
