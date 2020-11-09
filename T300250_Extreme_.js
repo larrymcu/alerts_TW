@@ -10,7 +10,7 @@ var ScriptTemp_T300250_Extreme_ = document.createElement('script');
                                    <div class='alertCAP_title' style='background-color:#086471;color:#ffffff'>{{@Event}}</div>\
                               </div>\
                          </div>\
-                         <div class='block_down' style='background-color:#d9ead3;color:#000000;height:180px;font-size:16px'>\
+                         <div class='block_down' style='background-color:#d9ead3;color:#000000;height:200px;font-size:16px'>\
                               <div class='alertCAP_con' style='font-size:16px;'>\
                                  <div class='alertCAP_time' style= 'color:#000000;font-size:16px;'>{{@Time}}│{{@OrgName}}</div>\
                                    {{@Summary}}\

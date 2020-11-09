@@ -3,16 +3,16 @@ var ScriptTemp_T300250_Extreme_ = document.createElement('script');
                             ScriptTemp_T300250_Extreme_.id = 'TempID_T300250_Extreme_';
                             ScriptTemp_T300250_Extreme_.text = "<li> \
                     <div class='alertCAP_banner alertCAP_banner02 bannerYellow banner300X250' style='width:300px;margin: 0px auto;'>\
-                         <div class='block_up' style='background-color:#ffff00;color:#000000;height:70px;'>\
+                         <div class='block_up' style='background-color:#086471;color:#ffffff;height:70px;'>\
                               <div class='alertCAP_Area'>全國</div>\
-                              <div class='alertCAP_titleicon'style='background-color:#ffff00;'>\
+                              <div class='alertCAP_titleicon'style='background-color:#086471;'>\
           	                    <img src='{{@AlertImage}}';style='width:35px;height:52.5px;'title='{{@Event}}' alt='{{@Event}}'>\
-                                   <div class='alertCAP_title' style='background-color:#ffff00;color:#000000'>{{@Event}}</div>\
+                                   <div class='alertCAP_title' style='background-color:#086471;color:#ffffff'>{{@Event}}</div>\
                               </div>\
                          </div>\
-                         <div class='block_down' style='background-color:#ffffff;color:#000000;height:180px;font-size:px'>\
-                              <div class='alertCAP_con' style='font-size:px;'>\
-                                 <div class='alertCAP_time' style= 'color:#000000;font-size:px;'>{{@Time}}│{{@OrgName}}</div>\
+                         <div class='block_down' style='background-color:#d9ead3;color:#000000;height:200px;font-size:16px'>\
+                              <div class='alertCAP_con' style='font-size:16px;'>\
+                                 <div class='alertCAP_time' style= 'color:#000000;font-size:16px;'>{{@Time}}│{{@OrgName}}</div>\
                                    {{@Summary}}\
                                  </div>\
                                <div class='alertCAP_moreBOX'>\
