@@ -4,7 +4,7 @@ var ScriptTemp_T300250_Extreme_67 = document.createElement('script');
                             ScriptTemp_T300250_Extreme_67.text = "<li> \
                     <div class='alertCAP_banner alertCAP_banner02 bannerYellow banner300X250' style='width:300px;margin: 0px auto;'>\
                          <div class='block_up' style='background-color:#086471;color:#ffffff;height:70px;'>\
-                              <div class='alertCAP_Area'>台中市</div>\
+                              <div class='alertCAP_Area'>台南市</div>\
                               <div class='alertCAP_titleicon'style='background-color:#086471;'>\
           	                    <img src='{{@AlertImage}}';style='width:35px;height:52.5px;'title='{{@Event}}' alt='{{@Event}}'>\
                                    <div class='alertCAP_title' style='background-color:#086471;color:#ffffff'>{{@Event}}</div>\
