@@ -8,175 +8,431 @@
 </head>
 
 <body>
-
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
 }
-
-#map-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+#map-container{
+  position:fixed;
+  inset:0;
 }
-
-iframe.map-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: none;
+iframe.map-frame{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  display:none;
 }
-
-iframe.map-frame.active {
-  display: block;
+iframe.map-frame.active{
+  display:block;
 }
-
-#switcher {
-  position: fixed;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 100;
+/* =========================
+   桌機版切換器
+========================= */
+#switcher{
+  position:fixed;
+  top:45%;
+  right:16px;
+  transform:translate(130px,-50%);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:100;
+  transition:transform .3s ease;
 }
-
-#switcher button {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.2);
-  background: rgba(255,255,255,0.9);
-  color: #333;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  transition: all 0.15s;
+#switcher.expanded{
+  transform:translate(0,-50%);
 }
-
-#switcher button:hover {
-  background: rgba(255,255,255,1);
+#switcher.collapsed{
+  transform:translate(130px,-50%);
 }
-
-#switcher button.active {
-  background: rgba(255,255,255,1);
-  border-color: rgba(0,0,0,0.5);
-  font-weight: 600;
+#hover-zone{
+  position:fixed;
+  top:0;
+  right:0;
+  width:100px;
+  height:100vh;
+  z-index:99;
+}
+#switcher button{
+  padding:10px 16px;
+  font-size:14px;
+  font-weight:500;
+  border-radius:8px;
+  border:1px solid rgba(0,0,0,.2);
+  background:rgba(255,255,255,.92);
+  color:#333;
+  cursor:pointer;
+  backdrop-filter:blur(4px);
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  transition:.15s;
+  white-space:nowrap;
+}
+#switcher button:hover{
+  background:#fff;
+}
+#switcher button.active{
+  font-weight:600;
+  border-color:rgba(0,0,0,.5);
+}
+/* =========================
+   手機版浮動按鈕
+========================= */
+#mobile-toggle{
+  position:fixed;
+  right:12px;
+  top:45%;
+  transform:translateY(-50%);
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+  z-index:999;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  animation:
+    mobileHint 2.8s ease-in-out infinite,
+    mobileGlow 3s ease-out infinite;
+}
+/* =========================
+   呼吸動畫
+========================= */
+@keyframes mobileHint {
+  0% {
+    transform:translateY(-50%) scale(1);
+    opacity:.72;
+  }
+  50% {
+    transform:translateY(-50%) scale(1.08);
+    opacity:1;
+  }
+  100% {
+    transform:translateY(-50%) scale(1);
+    opacity:.72;
+  }
+}
+/* =========================
+   光暈動畫
+========================= */
+@keyframes mobileGlow {
+  0% {
+    box-shadow:
+      0 2px 10px rgba(0,0,0,.2),
+      0 0 0 0 rgba(255,255,255,.45);
+  }
+  70% {
+    box-shadow:
+      0 2px 10px rgba(0,0,0,.2),
+      0 0 0 14px rgba(255,255,255,0);
+  }
+  100% {
+    box-shadow:
+      0 2px 10px rgba(0,0,0,.2),
+      0 0 0 0 rgba(255,255,255,0);
+  }
+}
+/* =========================
+   手機版
+========================= */
+@media (max-width:768px){
+  #hover-zone{
+    display:none;
+  }
+  #switcher{
+    top:45%;
+    right:16px;
+    transform:translateY(-50%);
+  }
+  #switcher.expanded{
+    transform:translateY(-50%);
+  }
+  #switcher:not(.expanded){
+    display:none;
+  }
+  #mobile-toggle{
+    display:flex;
+  }
+}
+/* =========================
+   減少動畫模式支援
+========================= */
+@media (prefers-reduced-motion: reduce){
+  #mobile-toggle{
+    animation:none;
+  }
+  #switcher{
+    transition:none;
+  }
 }
 </style>
-
 <div id="map-container"></div>
-
+<div id="hover-zone"></div>
 <div id="switcher" role="group" aria-label="選擇地區">
-  <button id="btn-tw" onclick="switchMap('tw')">Google海外版</button>
-  <button id="btn-cn" onclick="switchMap('cn')">Bing中國版</button>
+  <button
+    id="btn-tw"
+    onclick="switchMap('tw')">
+    Google海外版
+  </button>
+  <button
+    id="btn-cn"
+    onclick="switchMap('cn')">
+    Bing中國版
+  </button>
 </div>
-
+<div id="mobile-toggle">🌐</div>
 <script>
 const STORAGE_KEY = "preferredMapRegion";
-
+const FIRST_VISIT_KEY = "mapSwitcherSeen";
 const w = window.innerWidth;
 const h = window.innerHeight;
-
 const MAPS = {
-  tw: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw",
-  cn: `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`
+  tw:
+  "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw",
+  cn:
+  `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`
 };
-
 let currentRegion = null;
 const frames = {};
-
-function detectDefault() {
-
-  // 優先讀取使用者曾選擇的版本
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  if (saved === "tw" || saved === "cn") {
+const switcher =
+  document.getElementById("switcher");
+const mobileToggle =
+  document.getElementById("mobile-toggle");
+const hoverZone =
+  document.getElementById("hover-zone");
+let mobileTimer;
+/* =========================
+   手機判斷
+========================= */
+function isMobile(){
+  return window.matchMedia(
+    "(max-width:768px)"
+  ).matches;
+}
+/* =========================
+   預設地圖判斷
+========================= */
+function detectDefault(){
+  const saved =
+    localStorage.getItem(
+      STORAGE_KEY
+    );
+  if(
+    saved === "tw" ||
+    saved === "cn"
+  ){
     return saved;
   }
-
-  // 沒有紀錄才依語言/時區判斷
-  const lang = (navigator.language || "").toLowerCase();
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  if (
+  const lang =
+    (navigator.language || "")
+    .toLowerCase();
+  const tz =
+    Intl.DateTimeFormat()
+    .resolvedOptions()
+    .timeZone;
+  if(
     tz === "Asia/Shanghai" ||
     lang === "zh-cn" ||
     lang.startsWith("zh-hans")
-  ) {
+  ){
     return "cn";
   }
-
   return "tw";
 }
-
-function switchMap(region) {
-
-  // 白名單驗證
-  if (!["tw", "cn"].includes(region)) {
+/* =========================
+   地圖切換
+========================= */
+function switchMap(region){
+  if(
+    !["tw","cn"].includes(region)
+  ){
     return;
   }
-
-  if (currentRegion === region) {
+  if(currentRegion === region){
     return;
   }
-
   currentRegion = region;
-
-  // 記錄使用者選擇
-  localStorage.setItem(STORAGE_KEY, region);
-
-  ["tw", "cn"].forEach(r => {
+  localStorage.setItem(
+    STORAGE_KEY,
+    region
+  );
+  ["tw","cn"].forEach(r => {
     document
-      .getElementById("btn-" + r)
-      .classList.toggle("active", r === region);
+      .getElementById(
+        "btn-" + r
+      )
+      .classList.toggle(
+        "active",
+        r === region
+      );
   });
-
-  // 先隱藏所有已存在 iframe
-  Object.values(frames).forEach(frame => {
-    frame.classList.remove("active");
-  });
-
-  // 尚未建立才建立
-  if (!frames[region]) {
-
-    const iframe = document.createElement("iframe");
-
-    iframe.src = MAPS[region];
-    iframe.className = "map-frame active";
-
-    iframe.allowFullscreen = true;
-    iframe.loading = "lazy";
-    iframe.referrerPolicy = "no-referrer-when-downgrade";
-
+  Object.values(frames)
+    .forEach(frame => {
+      frame.classList.remove(
+        "active"
+      );
+    });
+  if(!frames[region]){
+    const iframe =
+      document.createElement(
+        "iframe"
+      );
+    iframe.src =
+      MAPS[region];
+    iframe.className =
+      "map-frame active";
+    iframe.loading =
+      "lazy";
+    iframe.allowFullscreen =
+      true;
+    iframe.referrerPolicy =
+      "no-referrer-when-downgrade";
     document
-      .getElementById("map-container")
-      .appendChild(iframe);
-
-    frames[region] = iframe;
-
-  } else {
-
-    frames[region].classList.add("active");
-
+      .getElementById(
+        "map-container"
+      )
+      .appendChild(
+        iframe
+      );
+    frames[region] =
+      iframe;
+  }else{
+    frames[region]
+      .classList
+      .add("active");
   }
 }
-
-// 初始化
-switchMap(detectDefault());
+/* =========================
+   展開
+========================= */
+function expandMenu(){
+  switcher.classList.add(
+    "expanded"
+  );
+  switcher.classList.remove(
+    "collapsed"
+  );
+  if(isMobile()){
+    mobileToggle.style.display =
+      "none";
+  }
+}
+/* =========================
+   收納
+========================= */
+function collapseMenu(){
+  switcher.classList.remove(
+    "expanded"
+  );
+  if(isMobile()){
+    mobileToggle.style.display =
+      "flex";
+  }else{
+    switcher.classList.add(
+      "collapsed"
+    );
+  }
+}
+/* =========================
+   桌機 Hover
+========================= */
+hoverZone.addEventListener(
+  "mouseenter",
+  () => {
+    if(isMobile()) return;
+    expandMenu();
+  }
+);
+switcher.addEventListener(
+  "mouseleave",
+  () => {
+    if(isMobile()) return;
+    collapseMenu();
+  }
+);
+/* =========================
+   手機點擊 ❗
+========================= */
+mobileToggle.addEventListener(
+  "click",
+  () => {
+    expandMenu();
+    clearTimeout(
+      mobileTimer
+    );
+    mobileTimer =
+      setTimeout(
+        () => {
+          collapseMenu();
+        },
+        5000
+      );
+  }
+);
+/* =========================
+   初始化
+========================= */
+switchMap(
+  detectDefault()
+);
+const firstVisit =
+  !localStorage.getItem(
+    FIRST_VISIT_KEY
+  );
+if(firstVisit){
+  if(isMobile()){
+    mobileToggle.style.display =
+      "none";
+  }
+  expandMenu();
+  setTimeout(() => {
+    collapseMenu();
+    localStorage.setItem(
+      FIRST_VISIT_KEY,
+      "1"
+    );
+  },5000);
+}else{
+  collapseMenu();
+}
+/* =========================
+   視窗尺寸變化
+========================= */
+window.addEventListener(
+  "resize",
+  () => {
+    if(isMobile()){
+      switcher.classList.remove(
+        "collapsed"
+      );
+    }else{
+      if(
+        !switcher.classList.contains(
+          "expanded"
+        )
+      ){
+        switcher.classList.add(
+          "collapsed"
+        );
+      }
+    }
+  }
+);
 </script>
-
 </body>
 </html>
