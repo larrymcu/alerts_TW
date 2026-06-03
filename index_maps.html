@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>地圖切換</title>
+</head>
+
+<body>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#map-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+iframe.map-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: none;
+}
+
+iframe.map-frame.active {
+  display: block;
+}
+
+#switcher {
+  position: fixed;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+#switcher button {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.15s;
+}
+
+#switcher button:hover {
+  background: rgba(255,255,255,1);
+}
+
+#switcher button.active {
+  background: rgba(255,255,255,1);
+  border-color: rgba(0,0,0,0.5);
+  font-weight: 600;
+}
+</style>
+
+<div id="map-container"></div>
+
+<div id="switcher" role="group" aria-label="選擇地區">
+  <button id="btn-tw" onclick="switchMap('tw')">Google海外版</button>
+  <button id="btn-cn" onclick="switchMap('cn')">Bing中國版</button>
+</div>
+
+<script>
+const STORAGE_KEY = "preferredMapRegion";
+
+const w = window.innerWidth;
+const h = window.innerHeight;
+
+const MAPS = {
+  tw: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw",
+  cn: `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`
+};
+
+let currentRegion = null;
+const frames = {};
+
+function detectDefault() {
+
+  // 優先讀取使用者曾選擇的版本
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (saved === "tw" || saved === "cn") {
+    return saved;
+  }
+
+  // 沒有紀錄才依語言/時區判斷
+  const lang = (navigator.language || "").toLowerCase();
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  if (
+    tz === "Asia/Shanghai" ||
+    lang === "zh-cn" ||
+    lang.startsWith("zh-hans")
+  ) {
+    return "cn";
+  }
+
+  return "tw";
+}
+
+function switchMap(region) {
+
+  // 白名單驗證
+  if (!["tw", "cn"].includes(region)) {
+    return;
+  }
+
+  if (currentRegion === region) {
+    return;
+  }
+
+  currentRegion = region;
+
+  // 記錄使用者選擇
+  localStorage.setItem(STORAGE_KEY, region);
+
+  ["tw", "cn"].forEach(r => {
+    document
+      .getElementById("btn-" + r)
+      .classList.toggle("active", r === region);
+  });
+
+  // 先隱藏所有已存在 iframe
+  Object.values(frames).forEach(frame => {
+    frame.classList.remove("active");
+  });
+
+  // 尚未建立才建立
+  if (!frames[region]) {
+
+    const iframe = document.createElement("iframe");
+
+    iframe.src = MAPS[region];
+    iframe.className = "map-frame active";
+
+    iframe.allowFullscreen = true;
+    iframe.loading = "lazy";
+    iframe.referrerPolicy = "no-referrer-when-downgrade";
+
+    document
+      .getElementById("map-container")
+      .appendChild(iframe);
+
+    frames[region] = iframe;
+
+  } else {
+
+    frames[region].classList.add("active");
+
+  }
+}
+
+// 初始化
+switchMap(detectDefault());
+</script>
+
+</body>
+</html>
