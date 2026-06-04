@@ -199,13 +199,20 @@ iframe.map-frame.active{
 <script>
 const STORAGE_KEY = "preferredMapRegion";
 const FIRST_VISIT_KEY = "mapSwitcherSeen";
-const w = window.innerWidth;
-const h = window.innerHeight;
+/* =========================
+   Bing URL 在 iframe mount 後才計算
+   用 getBoundingClientRect() 取實際渲染尺寸
+   只算一次，不隨 resize 重載
+========================= */
+function buildBingUrl(iframe){
+  const r = iframe.getBoundingClientRect();
+  const w = Math.round(r.width)  || window.innerWidth;
+  const h = Math.round(r.height) || window.innerHeight;
+  return `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`;
+}
 const MAPS = {
   tw:
-  "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw",
-  cn:
-  `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`
+  "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw"
 };
 let currentRegion = null;
 const frames = {};
@@ -292,8 +299,6 @@ function switchMap(region){
       document.createElement(
         "iframe"
       );
-    iframe.src =
-      MAPS[region];
     iframe.className =
       "map-frame active";
     iframe.loading =
@@ -311,6 +316,21 @@ function switchMap(region){
       );
     frames[region] =
       iframe;
+    /* =========================
+       先讓 CSS inset:0 完成 layout
+       再用 getBoundingClientRect()
+       讀實際尺寸後才設 src
+       cn 才需要傳 h/w，tw 直接給
+    ========================= */
+    if(region === "cn"){
+      requestAnimationFrame(() => {
+        iframe.src =
+          buildBingUrl(iframe);
+      });
+    }else{
+      iframe.src =
+        MAPS[region];
+    }
   }else{
     frames[region]
       .classList
