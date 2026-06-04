@@ -205,15 +205,32 @@ const FIRST_VISIT_KEY = "mapSwitcherSeen";
    只算一次，不隨 resize 重載
 ========================= */
 function buildBingUrl(iframe){
-  const r = iframe.getBoundingClientRect();
-  const w = Math.round(r.width)  || window.innerWidth;
-  const h = Math.round(r.height) || window.innerHeight;
+  const realW = window.innerWidth;
+  const realH = window.innerHeight;
+
+  const scale = Math.max(
+    realW / BING_MAX_SIZE,
+    realH / BING_MAX_SIZE,
+    1
+  );
+
+  const w = Math.round(realW / scale);
+  const h = Math.round(realH / scale);
+
+  iframe.style.width = w + "px";
+  iframe.style.height = h + "px";
+  iframe.style.transformOrigin = "top left";
+  iframe.style.transform = `scale(${scale})`;
+
   return `https://www.bing.com/maps/embed?h=${h}&w=${w}&cp=35.86~104.19&lvl=4&type=d&sty=r&src=SHELL&FORM=MBEDV8`;
 }
 const MAPS = {
   tw:
   "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2531888.7813265007!2d120.02874760263803!3d23.55458284924392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780450509130!5m2!1szh-TW!2stw"
 };
+const CN_MOBILE_MAP =
+"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d21874614.1632516!2d105.50017561759148!3d37.976060572790644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780586946172!5m2!1szh-TW!2stw";
+const BING_MAX_SIZE = 1200;
 let currentRegion = null;
 const frames = {};
 const switcher =
@@ -323,14 +340,18 @@ function switchMap(region){
        cn 才需要傳 h/w，tw 直接給
     ========================= */
     if(region === "cn"){
-      requestAnimationFrame(() => {
-        iframe.src =
-          buildBingUrl(iframe);
-      });
-    }else{
-      iframe.src =
-        MAPS[region];
-    }
+	  if(window.innerWidth <= 1024){
+		iframe.src = CN_MOBILE_MAP;
+	  }else{
+		requestAnimationFrame(() => {
+		  iframe.src =
+			buildBingUrl(iframe);
+		});
+	  }
+	}else{
+	  iframe.src =
+		MAPS[region];
+	}
   }else{
     frames[region]
       .classList
