@@ -205,12 +205,14 @@ const FIRST_VISIT_KEY = "mapSwitcherSeen";
    只算一次，不隨 resize 重載
 ========================= */
 function buildBingUrl(iframe){
+  const MAX = 1200;
+
   const realW = window.innerWidth;
   const realH = window.innerHeight;
 
   const scale = Math.max(
-    realW / BING_MAX_SIZE,
-    realH / BING_MAX_SIZE,
+    realW / MAX,
+    realH / MAX,
     1
   );
 
@@ -230,7 +232,6 @@ const MAPS = {
 };
 const CN_MOBILE_MAP =
 "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d21874614.1632516!2d105.50017561759148!3d37.976060572790644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1780586946172!5m2!1szh-TW!2stw";
-const BING_MAX_SIZE = 1200;
 let currentRegion = null;
 const frames = {};
 const switcher =
@@ -247,6 +248,16 @@ function isMobile(){
   return window.matchMedia(
     "(max-width:768px)"
   ).matches;
+}
+
+function isDesktopOS(){
+  const ua = navigator.userAgent;
+  return (
+    ua.includes("Windows NT") ||
+    ua.includes("Macintosh") ||
+    ua.includes("X11") ||
+    ua.includes("Linux x86_64")
+  );
 }
 /* =========================
    預設地圖判斷
@@ -340,15 +351,15 @@ function switchMap(region){
        cn 才需要傳 h/w，tw 直接給
     ========================= */
     if(region === "cn"){
-	  if(window.innerWidth <= 1024){
-		iframe.src = CN_MOBILE_MAP;
-	  }else{
-		requestAnimationFrame(() => {
-		  iframe.src =
-			buildBingUrl(iframe);
-		});
-	  }
-	}else{
+      if(isDesktopOS()){
+        requestAnimationFrame(() => {
+          iframe.src =
+            buildBingUrl(iframe);
+        });
+      }else{
+        iframe.src = CN_MOBILE_MAP;
+      }
+    }else{
 	  iframe.src =
 		MAPS[region];
 	}
